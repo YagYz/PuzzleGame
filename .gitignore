@@ -1,0 +1,18 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv/
+env/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+
+# OS / Demos
+.DS_Store
+*.mp4
+af541123-a361-42e0-bb41-068448f9fa55.png
