@@ -12,7 +12,9 @@ pygame.display.set_caption("Puzzle Game")
 clock = pygame.time.Clock()
 font = pygame.font.SysFont(None, 40)
 
-walls, targets, boxes, player = level.parse_level(level.LEVEL_1)
+level_index = 0
+
+walls, targets, boxes, player = level.parse_level(level.LEVELS[level_index])
 
 OFFSET_X = 380
 OFFSET_Y = 180
@@ -34,10 +36,15 @@ while running:
             elif event.key in (pygame.K_DOWN, pygame.K_s):
                 dy = 1
             elif event.key == pygame.K_r:
-                walls, targets, boxes, player = level.parse_level(level.LEVEL_1)
+                level_index = 0
+                walls, targets, boxes, player = level.parse_level(level.LEVELS[level_index])
+            elif event.key == pygame.K_SPACE and gameLogic.is_level_completed(boxes, targets):
+                if level_index + 1 < len(level.LEVELS):
+                    level_index += 1
+                    walls, targets, boxes, player = level.parse_level(level.LEVELS[level_index])
                 
             if dx != 0 or dy != 0:
-                player, boxes = gameLogic.try_move(player, boxes, walls, dx, dy)
+                player, boxes, result = gameLogic.try_move(player, boxes, walls, dx, dy)
                 
     screen.fill(constants.COLOR_BG)
     
@@ -60,8 +67,9 @@ while running:
     pygame.draw.rect(screen, constants.COLOR_PLAYER, player_rect, border_radius=8)
     
     if gameLogic.is_level_completed(boxes, targets):
-        win_text = font.render("Tebrikler! Seviye Tamamlandi (r = yeniden baslat)", True, constants.COLOR_TEXT)
-        screen.blit(win_text, (OFFSET_X - 60, OFFSET_Y - 70))
+        win_text = font.render("Tebrikler! Seviye Tamamlandi (space = sonraki seviye, r = yeniden baslat)", True, constants.COLOR_TEXT)
+        rect = win_text.get_rect(center=(constants.SCREEN_WIDTH//2, 80))
+        screen.blit(win_text, rect)
         
     pygame.display.flip()
     clock.tick(constants.FPS)

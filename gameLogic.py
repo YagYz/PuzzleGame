@@ -3,18 +3,18 @@ def try_move(player, boxes, walls, dx, dy):
     
     # Collision Check
     if (nx, ny) in walls:
-        return player, boxes
+        return player, boxes, "blocked"
     
     # Check Boxes
     if (nx, ny) in boxes:
-        box_nx, box_ny = nx + dx, ny + dy
-        if (box_nx, box_ny) in walls or (box_nx, box_ny) in boxes:
-            return player, boxes
-        
-        boxes.remove((nx, ny))
-        boxes.add((box_nx, box_ny))
-        
-    return (nx, ny), boxes
+        bx, by = nx + dx, ny + dy
+        if (bx, by) in walls or (bx, by) in boxes:
+            return player, boxes, "blocked"
+        new_boxs = set(boxes)
+        new_boxs.remove((nx,ny))
+        new_boxs.add((bx,by))
+        return (nx, ny), new_boxs, "pushed"
+    return (nx, ny), boxes, "moved"
 
 def is_level_completed(boxes, targets):
     return boxes == targets
